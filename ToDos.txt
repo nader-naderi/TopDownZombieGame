@@ -1,0 +1,25 @@
+
+-------------------
+----- ToDo --------
+-------------------
+
+- Pickup on zombie death
+- Generate Random Walls 
+- Zombies Pathfinding Dijkestra
+- AudioManager
+- UIManager
+- Scene Manager
+- Entity Componenet System
+
+-------------------
+----- Doing -------
+-------------------
+- Make the code Organized
+- Visual Improvemnet
+------------------
+----- Done -------
+------------------
+
+
+
+
