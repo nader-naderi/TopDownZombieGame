@@ -99,25 +99,21 @@ void GameEngine::UpdateCameraInput()
 
 void GameEngine::HandleReloading()
 {
-	if (bulletsSpare >= clipSize)
+	if (bulletsSpare <= 0)
 	{
-		// Plenty of bullets. Reload.
-		bulletsInClip = clipSize;
-		bulletsSpare -= clipSize;
-		reload.play();
-	}
-	else if (bulletsSpare > 0)
-	{
-		// Only few bullets left
-		bulletsInClip = bulletsSpare;
-		bulletsSpare = 0;
-		reload.play();
-	}
-	else
-	{
-		// More here soon?!
 		reloadFailed.play();
+
+		return;
 	}
+
+	int bulletsToLead = clipSize - bulletsInClip;
+	int bulletsToDeduct = (bulletsSpare >= bulletsToLead) ? bulletsToLead : bulletsSpare;
+
+	bulletsSpare -= bulletsToDeduct;
+	bulletsInClip += bulletsToDeduct;
+
+	reload.play();
+
 }
 
 void GameEngine::UpdateReloadInput(Event event)
