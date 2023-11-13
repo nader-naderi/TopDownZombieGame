@@ -11,7 +11,9 @@ GameEngine::GameEngine()
 	window = &win;
 	View mview(sf::FloatRect(0, 0, resolution.x, resolution.y));
 	mainView = &mview;
-	window->setMouseCursorVisible(true);
+
+	window->setMouseCursorVisible(false);
+
 	View hview(sf::FloatRect(0, 0, resolution.x, resolution.y));
 	hudView = &hview;
 
@@ -751,7 +753,7 @@ void GameEngine::InitializeBackground()
 void GameEngine::InitializeCrosshair()
 {
 	spriteCrosshair.setTexture(textureCrosshair);
-	spriteCrosshair.setOrigin(25, 25);
+	spriteCrosshair.setOrigin(16, 16);
 }
 
 void GameEngine::InitUI()

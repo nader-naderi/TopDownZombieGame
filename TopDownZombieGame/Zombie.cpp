@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 void Zombie::spawn(float startX, float startY, int type, int seed)
 {
 
@@ -64,7 +63,7 @@ bool Zombie::hit()
 		// dead
 		m_Alive = false;
 		m_Sprite.setTexture(TextureHolder::GetTexture(
-			"graphics/blood.png"));
+			"graphics/bloodsplats/bloodsplats_0006.png"));
 
 		return true;
 	}

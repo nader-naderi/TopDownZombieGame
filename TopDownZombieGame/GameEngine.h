@@ -80,7 +80,7 @@ public:
 
 	GameEngine(GameEngine&&) {}
 	GameEngine(const GameEngine&) = default;
-
+	GameEngine& operator=(const GameEngine&) = delete;
 	~GameEngine();
 
 	void InitializeHealthBar();
@@ -119,7 +119,7 @@ private:
 
 	Texture textureIcons = TextureHolder::GetTexture("graphics/zombie_icons.png");
 	Texture textureBackground = TextureHolder::GetTexture("graphics/floor-tiles.png");
-	Texture textureCrosshair = TextureHolder::GetTexture("graphics/crosshair.png");
+	Texture textureCrosshair = TextureHolder::GetTexture("graphics/Crosshairs/WeaponCrosshair.png");
 	Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
 	Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/AmmoPickup.png");
 

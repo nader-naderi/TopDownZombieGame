@@ -31,6 +31,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="F:\My Works\Tutorials\Lynda\C++\Lynda – C++ Game Programming 1\Ex_Files_C_Plus_Plus_Programming_1\Ex_Files_C_Plus_Plus_Programming_1\Exercise Files\Proj_02_Codes\Zombie Arena Enhanced Version\code\CreateBackground.cpp" />
     <ClCompile Include="F:\My Works\Tutorials\Lynda\C++\Lynda – C++ Game Programming 1\Ex_Files_C_Plus_Plus_Programming_1\Ex_Files_C_Plus_Plus_Programming_1\Exercise Files\Proj_02_Codes\Zombie Arena Enhanced Version\code\CreateHorde.cpp" />
+    <ClCompile Include="GameObject.h" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pickup.cpp" />
