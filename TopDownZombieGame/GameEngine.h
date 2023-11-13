@@ -19,11 +19,11 @@ enum class State { PAUSED, LEVELING_UP, GAME_OVER, PLAYING };
 Zombie* createHorde(int numZombies, IntRect arena);
 int createBackground(VertexArray& rVA, IntRect arena);
 
-class ZombieArena 
+class GameEngine 
 {
 public:
 	void InitEngine();
-	ZombieArena();
+	GameEngine();
 
 	void InitializeAssets();
 	void InitPickups();
@@ -78,10 +78,10 @@ public:
 	void DrawOnGameOverState();
 	void DrawHUD();
 
-	ZombieArena(ZombieArena&&) {}
-	ZombieArena(const ZombieArena&) = default;
+	GameEngine(GameEngine&&) {}
+	GameEngine(const GameEngine&) = default;
 
-	~ZombieArena();
+	~GameEngine();
 
 	void InitializeHealthBar();
 
@@ -117,10 +117,11 @@ private:
 	Pickup* healthPickup;
 	Pickup* ammoPickup;
 
-	Texture textureBackground = TextureHolder::GetTexture("graphics/background_sheet.png");
+	Texture textureIcons = TextureHolder::GetTexture("graphics/zombie_icons.png");
+	Texture textureBackground = TextureHolder::GetTexture("graphics/floor-tiles.png");
 	Texture textureCrosshair = TextureHolder::GetTexture("graphics/crosshair.png");
 	Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
-	Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/ammo_icon.png");
+	Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/AmmoPickup.png");
 
 	Text zombiesRemainingText;
 	int wave = 0;

@@ -1,8 +1,8 @@
-#include "ZombieArena.h"
+#include "GameEngine.h"
 
 
 int main()
 {
-	ZombieArena game = ZombieArena();
+	GameEngine game = GameEngine();
 	return 0;
 }

@@ -1,13 +1,13 @@
-#include "ZombieArena.h"
+#include "GameEngine.h"
 
 using namespace sf;
 
-ZombieArena::ZombieArena()
+GameEngine::GameEngine()
 {
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
 	RenderWindow win(VideoMode(resolution.x, resolution.y),
-		"Zombie Arena", Style::Fullscreen);
+		"Top Down Zombie Shooter", Style::Fullscreen);
 	window = &win;
 	View mview(sf::FloatRect(0, 0, resolution.x, resolution.y));
 	mainView = &mview;
@@ -27,7 +27,7 @@ ZombieArena::ZombieArena()
 	Run();
 }
 
-void ZombieArena::UpdateInput(Event event)
+void GameEngine::UpdateInput(Event event)
 {
 	UpdateGameStateInput(event);
 
@@ -37,7 +37,7 @@ void ZombieArena::UpdateInput(Event event)
 }
 
 
-void ZombieArena::PrepareNextGame()
+void GameEngine::PrepareNextGame()
 {
 	SetState(State::LEVELING_UP);
 	wave = 0;
@@ -52,19 +52,19 @@ void ZombieArena::PrepareNextGame()
 	player.resetPlayerStats();
 }
 
-void ZombieArena::RestartGame()
+void GameEngine::RestartGame()
 {
 	SetState(State::PLAYING);
 	// Reset the clock so there isn't a frame jump
 	timerClock.restart();
 }
 
-void ZombieArena::SetState(State newState)
+void GameEngine::SetState(State newState)
 {
 	state = newState;
 }
 
-bool ZombieArena::CheckState(State targetState)
+bool GameEngine::CheckState(State targetState)
 {
 	return state == targetState;
 }
@@ -72,7 +72,7 @@ bool ZombieArena::CheckState(State targetState)
 /// <summary>
 /// Spin and zoom the world
 /// </summary>
-void ZombieArena::UpdateCameraInput()
+void GameEngine::UpdateCameraInput()
 {
 	if (Keyboard::isKeyPressed(Keyboard::Left))
 	{
@@ -95,7 +95,7 @@ void ZombieArena::UpdateCameraInput()
 	}
 }
 
-void ZombieArena::HandleReloading()
+void GameEngine::HandleReloading()
 {
 	if (bulletsSpare >= clipSize)
 	{
@@ -118,13 +118,13 @@ void ZombieArena::HandleReloading()
 	}
 }
 
-void ZombieArena::UpdateReloadInput(Event event)
+void GameEngine::UpdateReloadInput(Event event)
 {
 	if (CheckState(State::PLAYING) && event.key.code == Keyboard::R)
 		HandleReloading();
 }
 
-void ZombieArena::UpdateGameStateInput(Event event)
+void GameEngine::UpdateGameStateInput(Event event)
 {
 	if (event.type != Event::KeyPressed)
 		return;
@@ -137,7 +137,7 @@ void ZombieArena::UpdateGameStateInput(Event event)
 		PrepareNextGame();
 }
 
-void ZombieArena::HandleFireInput()
+void GameEngine::HandleFireInput()
 {
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		return;
@@ -160,7 +160,7 @@ void ZombieArena::HandleFireInput()
 	}
 }
 
-void ZombieArena::HandlePlayerMoveInput()
+void GameEngine::HandlePlayerMoveInput()
 {
 	if (Keyboard::isKeyPressed(Keyboard::W))
 		player.moveUp();
@@ -183,7 +183,7 @@ void ZombieArena::HandlePlayerMoveInput()
 		player.stopRight();
 }
 
-void ZombieArena::HandlePlayerInput()
+void GameEngine::HandlePlayerInput()
 {
 	if (!CheckState(State::PLAYING))
 		return;
@@ -192,7 +192,7 @@ void ZombieArena::HandlePlayerInput()
 	HandleFireInput();
 }
 
-void ZombieArena::UpdateLevelUpState(Event event)
+void GameEngine::UpdateLevelUpState(Event event)
 {
 	if (!CheckState(State::LEVELING_UP))
 		return;
@@ -205,43 +205,43 @@ void ZombieArena::UpdateLevelUpState(Event event)
 	ReinitializeTheLevel();
 }
 
-void ZombieArena::UpgradeFireRate()
+void GameEngine::UpgradeFireRate()
 {
 	fireRate++;
 	SetState(State::PLAYING);
 }
 
-void ZombieArena::UpgradeClipSize()
+void GameEngine::UpgradeClipSize()
 {
 	clipSize += clipSize;
 	SetState(State::PLAYING);
 }
 
-void ZombieArena::UpgradeHealth()
+void GameEngine::UpgradeHealth()
 {
 	player.upgradeHealth();
 	SetState(State::PLAYING);
 }
 
-void ZombieArena::UpgradeSpeed()
+void GameEngine::UpgradeSpeed()
 {
 	player.upgradeSpeed();
 	SetState(State::PLAYING);
 }
 
-void ZombieArena::UpgradeHealthPickup()
+void GameEngine::UpgradeHealthPickup()
 {
 	healthPickup->upgrade();
 	SetState(State::PLAYING);
 }
 
-void ZombieArena::UpgradeAmmoPickup()
+void GameEngine::UpgradeAmmoPickup()
 {
 	ammoPickup->upgrade();
 	SetState(State::PLAYING);
 }
 
-void ZombieArena::HandleUpgradeSelection(Event event)
+void GameEngine::HandleUpgradeSelection(Event event)
 {
 	if (event.key.code == Keyboard::Num1)
 		UpgradeFireRate();
@@ -262,7 +262,7 @@ void ZombieArena::HandleUpgradeSelection(Event event)
 		UpgradeAmmoPickup();
 }
 
-void ZombieArena::ReinitializeTheLevel()
+void GameEngine::ReinitializeTheLevel()
 {
 	wave++;
 
@@ -299,7 +299,7 @@ void ZombieArena::ReinitializeTheLevel()
 	timerClock.restart();
 }
 
-void ZombieArena::UpdateInput()
+void GameEngine::UpdateInput()
 {
 	Event event;
 
@@ -313,7 +313,7 @@ void ZombieArena::UpdateInput()
 	UpdateLevelUpState(event);
 }
 
-void ZombieArena::UpdateScene()
+void GameEngine::UpdateScene()
 {
 	if (state != State::PLAYING)
 		return;
@@ -362,14 +362,14 @@ void ZombieArena::UpdateScene()
 	UpdateUI();
 }
 
-void ZombieArena::HandlePhysics()
+void GameEngine::HandlePhysics()
 {
 	HandlePlayerPhysics();
 	HandleZombiesPhysics();
 	PickupablesPhysics();
 }
 
-void ZombieArena::HandlePlayerPhysics()
+void GameEngine::HandlePlayerPhysics()
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -405,7 +405,7 @@ void ZombieArena::HandlePlayerPhysics()
 	}
 }
 
-void ZombieArena::HandleZombiesPhysics()
+void GameEngine::HandleZombiesPhysics()
 {
 	for (int i = 0; i < numZombies; i++)
 	{
@@ -430,7 +430,7 @@ void ZombieArena::HandleZombiesPhysics()
 	}// End player touched
 }
 
-void ZombieArena::PickupablesPhysics()
+void GameEngine::PickupablesPhysics()
 {
 	// Has the player touched health pickup
 	if (player.getPosition().intersects
@@ -452,7 +452,7 @@ void ZombieArena::PickupablesPhysics()
 	}
 }
 
-void ZombieArena::UpdateUI()
+void GameEngine::UpdateUI()
 {
 	// size up the health bar
 	healthBar.setSize(Vector2f(player.getHealth() * 3, 70));
@@ -468,7 +468,7 @@ void ZombieArena::UpdateUI()
 	UpdateHUD();
 }
 
-void ZombieArena::UpdateHUD()
+void GameEngine::UpdateHUD()
 {
 
 	// Update game HUD text
@@ -502,7 +502,7 @@ void ZombieArena::UpdateHUD()
 	timeSinceLastUpdate = Time::Zero;
 }
 
-void ZombieArena::DrawScene()
+void GameEngine::DrawScene()
 {
 	DrawOnPlayState();
 	DrawOnLevelingUpState();
@@ -510,7 +510,7 @@ void ZombieArena::DrawScene()
 	DrawOnGameOverState();
 }
 
-void ZombieArena::DrawOnPlayState()
+void GameEngine::DrawOnPlayState()
 {
 	if (!CheckState(State::PLAYING))
 		return;
@@ -548,7 +548,7 @@ void ZombieArena::DrawOnPlayState()
 	
 }
 
-void ZombieArena::DrawOnLevelingUpState()
+void GameEngine::DrawOnLevelingUpState()
 {
 	if (!CheckState(State::LEVELING_UP))
 		return;
@@ -557,7 +557,7 @@ void ZombieArena::DrawOnLevelingUpState()
 	window->draw(levelUpText);
 }
 
-void ZombieArena::DrawOnPausedState()
+void GameEngine::DrawOnPausedState()
 {
 	if (!CheckState(State::PAUSED))
 		return;
@@ -565,7 +565,7 @@ void ZombieArena::DrawOnPausedState()
 	window->draw(pausedText);
 }
 
-void ZombieArena::DrawOnGameOverState()
+void GameEngine::DrawOnGameOverState()
 {
 	if (!CheckState(State::GAME_OVER))
 		return;
@@ -576,7 +576,7 @@ void ZombieArena::DrawOnGameOverState()
 	window->draw(hiScoreText);
 }
 
-void ZombieArena::DrawHUD()
+void GameEngine::DrawHUD()
 {
 	window->draw(spriteAmmoIcon);
 	window->draw(ammoText);
@@ -587,9 +587,9 @@ void ZombieArena::DrawHUD()
 	window->draw(zombiesRemainingText);
 }
 
-void ZombieArena::InitializeAssets()
+void GameEngine::InitializeAssets()
 {
-	font.loadFromFile("fonts/zombiecontrol.ttf");
+	font.loadFromFile("fonts/OpenSans-Regular.ttf");
 	InitializeCrosshair();
 	InitializeBackground();
 	LoadHighscoreFile();
@@ -601,16 +601,16 @@ void ZombieArena::InitializeAssets()
 	InitializeAudio();
 }
 
-void ZombieArena::InitEngine()
+void GameEngine::InitEngine()
 {
 }
 
-void ZombieArena::InitPickups()
+void GameEngine::InitPickups()
 {
 
 }
 
-void ZombieArena::InitializeAudio()
+void GameEngine::InitializeAudio()
 {
 	hitBuffer.loadFromFile("sound/hit.wav");
 	hitSound.setBuffer(hitBuffer);
@@ -645,18 +645,18 @@ void ZombieArena::InitializeAudio()
 	ambient.play();
 }
 
-void ZombieArena::InitUIHighScore()
+void GameEngine::InitUIHighScore()
 {
 	hiScoreText.setFont(font);
 	hiScoreText.setCharacterSize(55);
 	hiScoreText.setFillColor(Color::White);
 	hiScoreText.setPosition(1400, 0);
 	std::stringstream s;
-	s << "Hi Score:" << hiScore;
+	s << "High Score:" << hiScore;
 	hiScoreText.setString(s.str());
 }
 
-void ZombieArena::LoadHighscoreFile()
+void GameEngine::LoadHighscoreFile()
 {
 	std::ifstream inputFile("gamedata/scores.txt");
 	if (inputFile.is_open())
@@ -666,7 +666,7 @@ void ZombieArena::LoadHighscoreFile()
 	}
 }
 
-void ZombieArena::InitUIScore()
+void GameEngine::InitUIScore()
 {
 	scoreText.setFont(font);
 	scoreText.setCharacterSize(55);
@@ -674,7 +674,7 @@ void ZombieArena::InitUIScore()
 	scoreText.setPosition(20, 0);
 }
 
-void ZombieArena::InitUIAmmo()
+void GameEngine::InitUIAmmo()
 {
 	ammoText.setFont(font);
 	ammoText.setCharacterSize(55);
@@ -683,7 +683,7 @@ void ZombieArena::InitUIAmmo()
 
 }
 
-void ZombieArena::InitUIState_LevelUp()
+void GameEngine::InitUIState_LevelUp()
 {
 	levelUpText.setFont(font);
 	levelUpText.setCharacterSize(80);
@@ -700,7 +700,7 @@ void ZombieArena::InitUIState_LevelUp()
 	levelUpText.setString(levelUpStream.str());
 }
 
-void ZombieArena::InitUIState_GameOver()
+void GameEngine::InitUIState_GameOver()
 {
 	gameOverText.setFont(font);
 	gameOverText.setCharacterSize(125);
@@ -709,7 +709,7 @@ void ZombieArena::InitUIState_GameOver()
 	gameOverText.setString("Press Enter to play");
 }
 
-void ZombieArena::InitUIState_Paused()
+void GameEngine::InitUIState_Paused()
 {
 	pausedText.setFont(font);
 	pausedText.setCharacterSize(155);
@@ -718,13 +718,13 @@ void ZombieArena::InitUIState_Paused()
 	pausedText.setString("Press Enter \nto continue");
 }
 
-void ZombieArena::InitializeUIAmmo()
+void GameEngine::InitializeUIAmmo()
 {
 	spriteAmmoIcon.setTexture(textureAmmoIcon);
 	spriteAmmoIcon.setPosition(20, 980);
 }
 
-void ZombieArena::InitializeWaves()
+void GameEngine::InitializeWaves()
 {
 	waveNumberText.setFont(font);
 	waveNumberText.setCharacterSize(55);
@@ -733,7 +733,7 @@ void ZombieArena::InitializeWaves()
 	waveNumberText.setString("Wave: 0");
 }
 
-void ZombieArena::InitializeZombies()
+void GameEngine::InitializeZombies()
 {
 	zombiesRemainingText.setFont(font);
 	zombiesRemainingText.setCharacterSize(55);
@@ -742,19 +742,19 @@ void ZombieArena::InitializeZombies()
 	zombiesRemainingText.setString("Zombies: 100");
 }
 
-void ZombieArena::InitializeBackground()
+void GameEngine::InitializeBackground()
 {
 	spriteGameOver.setTexture(textureGameOver);
 	spriteGameOver.setPosition(0, 0);
 }
 
-void ZombieArena::InitializeCrosshair()
+void GameEngine::InitializeCrosshair()
 {
 	spriteCrosshair.setTexture(textureCrosshair);
 	spriteCrosshair.setOrigin(25, 25);
 }
 
-void ZombieArena::InitUI()
+void GameEngine::InitUI()
 {
 	InitUIState_Paused();
 	InitUIState_GameOver();
@@ -764,17 +764,17 @@ void ZombieArena::InitUI()
 	InitUIHighScore();
 }
 
-ZombieArena::~ZombieArena()
+GameEngine::~GameEngine()
 {
 }
 
-void ZombieArena::InitializeHealthBar()
+void GameEngine::InitializeHealthBar()
 {
 	healthBar.setFillColor(Color::Red);
 	healthBar.setPosition(450, 980);
 }
 
-void ZombieArena::Run()
+void GameEngine::Run()
 {
 	while (window->isOpen())
 	{

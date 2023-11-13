@@ -10,16 +10,28 @@
 - UIManager
 - Scene Manager
 - Entity Componenet System
-
+- Sprite Sheet Animation
+- Minimap
+- Compas
 -------------------
 ----- Doing -------
 -------------------
-- Make the code Organized
-- Visual Improvemnet
+
+
 ------------------
 ----- Done -------
 ------------------
-
-
-
+- Make the code Organized: Into smaller functions.
+- Visual Improvemnet:
+	- Characters:
+		- Replace Player
+		- Replace Zombie crawler
+		- Replace Zombie Runner
+		- Replace Zombie Boss
+	- Pickups:
+		- (Done) Replace Ammo Pickup
+		- (Done) Replace Health Pickup
+	- World
+		- (Done) Replace Tilesheets
+		- 
 
