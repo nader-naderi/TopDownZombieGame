@@ -1,20 +1,40 @@
 #include "player.h"
 #include "TextureHolder.h"
+#include <iostream>
+#include "Configuration.hpp"
+#include <utility> //forward
 
-Player::Player()
+Player::Player() : ActionTarget(Configuration::playerInputs)
 {
 	m_Speed = START_SPEED;
 	m_Health = START_HEALTH;
 	m_MaxHealth = START_HEALTH;
 
-	// Associate a texture with the sprite
-	// !!Watch this space!!
-	m_Sprite = Sprite(TextureHolder::GetTexture(
-		"graphics/Top_Down_Survivor/handgun/idle/survivor-idle_handgun_0.png"));
+	m_Sprite = Sprite(Configuration::textures.get(Configuration::Textures::Player));
+
 	m_Sprite.setScale(Vector2f(0.25f, 0.25f));
-	// Set the origin of the sprite to the centre, 
-	// for smooth rotation
 	m_Sprite.setOrigin(120, 120);
+
+	bind(Configuration::PlayerInputs::Left, [this](const sf::Event&) {
+		std::cout << "Player Moving Left\n";
+		});
+
+	bind(Configuration::PlayerInputs::Right, [this](const sf::Event&) {
+		std::cout << "Player Moving Right\n";
+		});
+
+	bind(Configuration::PlayerInputs::Down, [this](const sf::Event&) {
+		std::cout << "Player Moving Down\n";
+		});
+
+	bind(Configuration::PlayerInputs::Up, [this](const sf::Event&) {
+		std::cout << "Player Moving Up\n";
+		});
+}
+
+void Player::processEvents()
+{
+	ActionTarget::processEvents();
 }
 
 void Player::resetPlayerStats()

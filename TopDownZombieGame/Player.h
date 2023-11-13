@@ -1,9 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "ActionTarget.h"
 
 using namespace sf;
 
-class Player
+class Player : public ActionTarget<int>
 {
 private:
 	const float START_SPEED = 200;
@@ -45,12 +45,12 @@ private:
 	// Speed in pixels per second
 	float m_Speed;
 
-
 	// All our public functions will come next
 public:
 
 	Player();
-
+	void processEvents();
+	
 	// Call this at the end of every game
 	void resetPlayerStats();
 
@@ -110,6 +110,5 @@ public:
 
 };
 
-
-
+#include "Player.tpl"
 #pragma once

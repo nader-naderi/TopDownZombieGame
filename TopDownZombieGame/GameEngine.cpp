@@ -113,7 +113,6 @@ void GameEngine::HandleReloading()
 	bulletsInClip += bulletsToDeduct;
 
 	reload.play();
-
 }
 
 void GameEngine::UpdateReloadInput(Event event)
