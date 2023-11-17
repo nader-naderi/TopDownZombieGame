@@ -16,7 +16,8 @@
 -------------------
 ----- Doing -------
 -------------------
-
+- Action System
+- Move Weapon Functionality to Player class
 
 ------------------
 ----- Done -------

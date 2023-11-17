@@ -1,5 +1,8 @@
 #pragma once
 #include "ActionTarget.h"
+#include "Bullet.h"
+#include <sstream>
+#include <SFML/Audio.hpp>
 
 using namespace sf;
 
@@ -34,6 +37,18 @@ private:
 	bool m_LeftPressed;
 	bool m_RightPressed;
 
+	// Weapon:
+	bool m_IsShooting;
+	int currentBullet = 0;
+	int bulletsSpare = 24;
+	int bulletsInClip = 6;
+	int clipSize = 6;
+	float fireRate = 1;
+	Sound shoot;
+	Sound reload;
+	Sound reloadFailed;
+	Sound powerup;
+	
 	// How much health has the player got?
 	int m_Health;
 	// What is the maximum health the player can have
@@ -47,12 +62,23 @@ private:
 
 	// All our public functions will come next
 public:
+	Bullet bullets[100];
 
 	Player();
 	void processEvents();
 	
 	// Call this at the end of every game
 	void resetPlayerStats();
+
+	void ResetWeaponStats();
+
+	// TODO: Move them in weapon class.
+	void StartFireWeaon();
+	bool UpdateWeapon(float delta, sf::Vector2f mousePos);
+	std::string UpdateHUD();
+	void AddAmmo(int ammo);
+	void StopFireWeapon();
+	void HandleReloading();
 
 	void spawn(IntRect arena, Vector2f resolution, int tileSize);
 
@@ -98,16 +124,20 @@ public:
 	// We will call this function once every frame
 	void update(float elapsedTime, Vector2i mousePosition);
 
+	void UpdateProjectiles(float& elapsedTime);
+
 	// Give player a speed boost
 	void upgradeSpeed();
 
 	// Give the player some health
 	void upgradeHealth();
 
+	void UpgradeFireRate();
+
+	void UpgradeClipSize();
+
 	// Increase the maximum amount of health the player can have
 	void increaseHealthLevel(int amount);
-
-
 };
 
 #include "Player.tpl"

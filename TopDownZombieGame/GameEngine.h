@@ -9,7 +9,6 @@
 #include <SFML/Audio.hpp>
 #include "Player.h"
 #include "TextureHolder.h"
-#include "Bullet.h"
 #include "Pickup.h"
 
 using namespace sf;
@@ -51,8 +50,6 @@ public:
 	void HandleReloading();
 	void UpdateReloadInput(Event event);
 	void UpdateGameStateInput(Event event);
-	void HandleFireInput();
-	void HandlePlayerMoveInput();
 	void HandlePlayerInput();
 	void UpdateLevelUpState(Event event);
 	void UpgradeFireRate();
@@ -109,7 +106,6 @@ private:
 	int numZombies;
 	int numZombiesAlive;
 	Zombie* zombies = NULL;
-	Bullet bullets[100];
 	Font font;
 	View* mainView;
 	View* hudView;
@@ -135,11 +131,6 @@ private:
 	int fpsMeasurementFrameInterval = 1000;
 	Sprite spriteAmmoIcon;
 
-	int currentBullet = 0;
-	int bulletsSpare = 24;
-	int bulletsInClip = 6;
-	int clipSize = 6;
-	float fireRate = 1;
 	// About the game
 	int score = 0;
 	int hiScore = 0;
@@ -153,18 +144,12 @@ private:
 	// Prepare the hit sound
 	Sound hitSound;
 	Sound splat;
-	Sound shoot;
-	Sound reload;
-	Sound reloadFailed;
-	Sound powerup;
+	
 	Sound pickup;
 	Sound ambient;
 	SoundBuffer hitBuffer;
 	SoundBuffer splatBuffer;
-	SoundBuffer shootBuffer;
-	SoundBuffer reloadBuffer;
-	SoundBuffer reloadFailedBuffer;
-	SoundBuffer powerupBuffer;
+
 	SoundBuffer pickupBuffer;
 	SoundBuffer ambientBuffer;
 

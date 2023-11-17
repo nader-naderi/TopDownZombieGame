@@ -15,25 +15,39 @@ Player::Player() : ActionTarget(Configuration::playerInputs)
 	m_Sprite.setScale(Vector2f(0.25f, 0.25f));
 	m_Sprite.setOrigin(120, 120);
 
+	shoot.setBuffer(Configuration::soundBuffers.get(Configuration::SoundEffect::Shoot));
+	reload.setBuffer(Configuration::soundBuffers.get(Configuration::SoundEffect::Reload));
+	reloadFailed.setBuffer(Configuration::soundBuffers.get(Configuration::SoundEffect::Reload_Failed));
+	powerup.setBuffer(Configuration::soundBuffers.get(Configuration::SoundEffect::Powerup));
+
 	bind(Configuration::PlayerInputs::Left, [this](const sf::Event&) {
-		std::cout << "Player Moving Left\n";
+		moveLeft();
 		});
 
 	bind(Configuration::PlayerInputs::Right, [this](const sf::Event&) {
-		std::cout << "Player Moving Right\n";
+		moveRight();
 		});
 
 	bind(Configuration::PlayerInputs::Down, [this](const sf::Event&) {
-		std::cout << "Player Moving Down\n";
+		moveDown();
 		});
 
 	bind(Configuration::PlayerInputs::Up, [this](const sf::Event&) {
-		std::cout << "Player Moving Up\n";
+		moveUp();
+		});
+
+	bind(Configuration::PlayerInputs::Fire, [this](const sf::Event&) {
+		StartFireWeaon();
 		});
 }
 
 void Player::processEvents()
 {
+	StopFireWeapon();
+	stopDown();
+	stopUp();
+	stopLeft();
+	stopRight();
 	ActionTarget::processEvents();
 }
 
@@ -42,6 +56,85 @@ void Player::resetPlayerStats()
 	m_Speed = START_SPEED;
 	m_Health = START_HEALTH;
 	m_MaxHealth = START_HEALTH;
+
+	ResetWeaponStats();
+}
+
+void Player::ResetWeaponStats()
+{
+	currentBullet = 0;
+	bulletsSpare = 24;
+	bulletsInClip = 6;
+	clipSize = 6;
+	fireRate = 1;
+}
+
+void Player::StartFireWeaon()
+{
+	m_IsShooting = true;
+
+}
+
+void Player::StopFireWeapon()
+{
+	m_IsShooting = false;
+}
+
+bool Player::UpdateWeapon(float delta, sf::Vector2f mousePos)
+{
+	if (!m_IsShooting)
+		return false;
+
+	if (bulletsInClip <= 0)
+	{
+		HandleReloading();
+		return false;
+	}
+
+	if (!(delta > 1000 / fireRate && bulletsInClip > 0))
+		return false;
+
+	bullets[currentBullet].shoot(
+		getCenter().x, getCenter().y,
+		mousePos.x, mousePos.y);
+
+	currentBullet++;
+	if (currentBullet > 99)
+		currentBullet = 0;
+
+	shoot.play();
+	bulletsInClip--;
+
+	return true;
+}
+std::string Player::UpdateHUD()
+{
+	std::stringstream ssAmmo;
+	ssAmmo << bulletsInClip << "/" << bulletsSpare;
+	return ssAmmo.str();
+}
+
+void Player::AddAmmo(int ammo) {
+	bulletsSpare += ammo;
+	reload.play();
+}
+
+void Player::HandleReloading()
+{
+	if (bulletsSpare <= 0)
+	{
+		//reloadFailed.play();
+
+		return;
+	}
+
+	int bulletsToLead = clipSize - bulletsInClip;
+	int bulletsToDeduct = (bulletsSpare >= bulletsToLead) ? bulletsToLead : bulletsSpare;
+
+	bulletsSpare -= bulletsToDeduct;
+	bulletsInClip += bulletsToDeduct;
+
+	//reload.play();
 }
 
 void Player::spawn(IntRect arena, Vector2f resolution, int tileSize)
@@ -152,6 +245,7 @@ void Player::stopDown()
 
 void Player::update(float elapsedTime, Vector2i mousePosition)
 {
+	UpdateProjectiles(elapsedTime);
 
 	if (m_UpPressed)
 	{
@@ -174,8 +268,6 @@ void Player::update(float elapsedTime, Vector2i mousePosition)
 	}
 
 	m_Sprite.setPosition(m_Position);
-
-
 
 	// Keep the player in the arena
 	if (m_Position.x > m_Arena.width - m_TileSize)
@@ -206,6 +298,13 @@ void Player::update(float elapsedTime, Vector2i mousePosition)
 	m_Sprite.setRotation(angle);
 }
 
+void Player::UpdateProjectiles(float& elapsedTime)
+{
+	for (int i = 0; i < 100; i++)
+		if (bullets[i].isInFlight())
+			bullets[i].update(elapsedTime);
+}
+
 void Player::upgradeSpeed()
 {
 	// 20% speed upgrade
@@ -216,7 +315,16 @@ void Player::upgradeHealth()
 {
 	// 20% max health upgrade
 	m_MaxHealth += (START_HEALTH * .2);
+}
 
+void Player::UpgradeFireRate()
+{
+	fireRate++;
+}
+
+void Player::UpgradeClipSize()
+{
+	clipSize += clipSize;
 }
 
 void Player::increaseHealthLevel(int amount)

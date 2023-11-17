@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include "Configuration.hpp"
 
 using namespace sf;
 
@@ -32,9 +33,7 @@ GameEngine::GameEngine()
 void GameEngine::UpdateInput(Event event)
 {
 	UpdateGameStateInput(event);
-
 	UpdateCameraInput();
-
 	UpdateReloadInput(event);
 }
 
@@ -44,13 +43,6 @@ void GameEngine::PrepareNextGame()
 	SetState(State::LEVELING_UP);
 	wave = 0;
 	score = 0;
-
-	currentBullet = 0;
-	bulletsSpare = 24;
-	bulletsInClip = 6;
-	clipSize = 6;
-	fireRate = 1;
-
 	player.resetPlayerStats();
 }
 
@@ -97,24 +89,6 @@ void GameEngine::UpdateCameraInput()
 	}
 }
 
-void GameEngine::HandleReloading()
-{
-	if (bulletsSpare <= 0)
-	{
-		reloadFailed.play();
-
-		return;
-	}
-
-	int bulletsToLead = clipSize - bulletsInClip;
-	int bulletsToDeduct = (bulletsSpare >= bulletsToLead) ? bulletsToLead : bulletsSpare;
-
-	bulletsSpare -= bulletsToDeduct;
-	bulletsInClip += bulletsToDeduct;
-
-	reload.play();
-}
-
 void GameEngine::UpdateReloadInput(Event event)
 {
 	if (CheckState(State::PLAYING) && event.key.code == Keyboard::R)
@@ -134,59 +108,15 @@ void GameEngine::UpdateGameStateInput(Event event)
 		PrepareNextGame();
 }
 
-void GameEngine::HandleFireInput()
-{
-	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		return;
-
-	if (playTime.asMilliseconds() - lastPressed.asMilliseconds() > 1000 / fireRate && bulletsInClip > 0)
-	{
-		// Pass the centre of the player and the centre of the crosshair
-		// to the shoot function
-		bullets[currentBullet].shoot(
-			player.getCenter().x, player.getCenter().y,
-			mouseWorldPosition.x, mouseWorldPosition.y);
-
-		currentBullet++;
-		if (currentBullet > 99)
-			currentBullet = 0;
-
-		lastPressed = playTime;
-		shoot.play();
-		bulletsInClip--;
-	}
-}
-
-void GameEngine::HandlePlayerMoveInput()
-{
-	if (Keyboard::isKeyPressed(Keyboard::W))
-		player.moveUp();
-	else
-		player.stopUp();
-
-	if (Keyboard::isKeyPressed(Keyboard::S))
-		player.moveDown();
-	else
-		player.stopDown();
-
-	if (Keyboard::isKeyPressed(Keyboard::A))
-		player.moveLeft();
-	else
-		player.stopLeft();
-
-	if (Keyboard::isKeyPressed(Keyboard::D))
-		player.moveRight();
-	else
-		player.stopRight();
-}
-
 void GameEngine::HandlePlayerInput()
 {
 	if (!CheckState(State::PLAYING))
 		return;
 
-	HandlePlayerMoveInput();
-	HandleFireInput();
+	player.processEvents();
+
+	if(player.UpdateWeapon(playTime.asMilliseconds() - lastPressed.asMilliseconds(), mouseWorldPosition))
+		lastPressed = playTime;
 }
 
 void GameEngine::UpdateLevelUpState(Event event)
@@ -204,13 +134,13 @@ void GameEngine::UpdateLevelUpState(Event event)
 
 void GameEngine::UpgradeFireRate()
 {
-	fireRate++;
+	player.UpgradeFireRate();
 	SetState(State::PLAYING);
 }
 
 void GameEngine::UpgradeClipSize()
 {
-	clipSize += clipSize;
+	player.UpgradeClipSize();
 	SetState(State::PLAYING);
 }
 
@@ -290,7 +220,7 @@ void GameEngine::ReinitializeTheLevel()
 	numZombiesAlive = numZombies;
 
 	// Play the powerup sound
-	powerup.play();
+	//powerup.play();
 
 	// Reset the clock so there isn't a frame jump
 	timerClock.restart();
@@ -308,6 +238,11 @@ void GameEngine::UpdateInput()
 
 	HandlePlayerInput();
 	UpdateLevelUpState(event);
+
+	if (!CheckState(State::PLAYING))
+		return;
+	
+	player.processEvent(event);
 }
 
 void GameEngine::UpdateScene()
@@ -347,9 +282,7 @@ void GameEngine::UpdateScene()
 			zombies[i].update(dt.asSeconds(), playerPosition);
 
 	// Update any bullets that are in-flight
-	for (int i = 0; i < 100; i++)
-		if (bullets[i].isInFlight())
-			bullets[i].update(dtAsSeconds);
+	
 
 	// Update the pickups
 	healthPickup->update(dtAsSeconds);
@@ -372,13 +305,13 @@ void GameEngine::HandlePlayerPhysics()
 	{
 		for (int j = 0; j < numZombies; j++)
 		{
-			if (bullets[i].isInFlight() && zombies[j].isAlive())
+			if (player.bullets[i].isInFlight() && zombies[j].isAlive())
 			{
-				if (bullets[i].getPosition().intersects
+				if (player.bullets[i].getPosition().intersects
 				(zombies[j].getPosition()))
 				{
 					// Stop the bullet
-					bullets[i].stop();
+					player.bullets[i].stop();
 
 					// Register the hit and see if it was a kill
 					if (zombies[j].hit()) {
@@ -443,9 +376,7 @@ void GameEngine::PickupablesPhysics()
 	if (player.getPosition().intersects
 	(ammoPickup->getPosition()) && ammoPickup->isSpawned())
 	{
-		bulletsSpare += ammoPickup->gotIt();
-		// Play a sound
-		reload.play();
+		player.AddAmmo(ammoPickup->gotIt());
 	}
 }
 
@@ -469,15 +400,12 @@ void GameEngine::UpdateHUD()
 {
 
 	// Update game HUD text
-	std::stringstream ssAmmo;
 	std::stringstream ssScore;
 	std::stringstream ssHiScore;
 	std::stringstream ssWave;
 	std::stringstream ssZombiesAlive;
 
-	// Update the ammo text
-	ssAmmo << bulletsInClip << "/" << bulletsSpare;
-	ammoText.setString(ssAmmo.str());
+	ammoText.setString(player.UpdateHUD());
 
 	// Update the score text
 	ssScore << "Score:" << score;
@@ -520,9 +448,10 @@ void GameEngine::DrawOnPlayState()
 	for (int i = 0; i < numZombies; i++)
 		window->draw(zombies[i].getSprite());
 
+	// ToDo: Scene manager and ECS will render all of the gameobject in one scene without the need to access it.
 	for (int i = 0; i < 100; i++)
-		if (bullets[i].isInFlight())
-			window->draw(bullets[i].getShape());
+		if (player.bullets[i].isInFlight())
+			window->draw(player.bullets[i].getShape());
 
 	// Draw the player
 	window->draw(player.getSprite());
@@ -616,30 +545,9 @@ void GameEngine::InitializeAudio()
 	splatBuffer.loadFromFile("sound/splat.wav");
 	splat.setBuffer(splatBuffer);
 
-	// Prepare the shoot sound
-	shootBuffer.loadFromFile("sound/shoot.mp3");
-	shoot.setBuffer(shootBuffer);
-
-	// Prepare the reload sound
-	reloadBuffer.loadFromFile("sound/reload.wav");
-	reload.setBuffer(reloadBuffer);
-
-	// Prepare the failed sound
-	reloadFailedBuffer.loadFromFile("sound/reload_failed.wav");
-	reloadFailed.setBuffer(reloadFailedBuffer);
-
-	// Prepare the powerup sound
-	powerupBuffer.loadFromFile("sound/powerup.wav");
-	powerup.setBuffer(powerupBuffer);
-
 	// Prepare the pickup sound
 	pickupBuffer.loadFromFile("sound/pickup.wav");
 	pickup.setBuffer(pickupBuffer);
-
-	ambientBuffer.loadFromFile("sound/ambientmain_0.ogg");
-	ambient.setBuffer(ambientBuffer);
-	ambient.setLoop(true);
-	ambient.play();
 }
 
 void GameEngine::InitUIHighScore()
@@ -677,7 +585,6 @@ void GameEngine::InitUIAmmo()
 	ammoText.setCharacterSize(55);
 	ammoText.setFillColor(Color::White);
 	ammoText.setPosition(200, 980);
-
 }
 
 void GameEngine::InitUIState_LevelUp()

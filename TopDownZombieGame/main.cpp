@@ -1,7 +1,6 @@
 #include "GameEngine.h"
 #include "Configuration.hpp"
 
-
 int main()
 {
 	Configuration::initialize();

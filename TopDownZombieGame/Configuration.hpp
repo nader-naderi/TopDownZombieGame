@@ -11,10 +11,13 @@ public:
     Configuration(const Configuration&) = delete;
     Configuration& operator=(const Configuration&) = delete;
 
-    enum Textures : int { Player };
-    static ResourceManager<sf::Texture, int> textures;
+    enum Textures : int { Player, Zombie,  };
+    enum SoundEffect : int { Shoot, Reload, Reload_Failed, Powerup };
 
-    enum PlayerInputs : int { Up, Left, Right, Down };
+    static ResourceManager<sf::Texture, int> textures;
+    static ResourceManager<sf::SoundBuffer, int> soundBuffers;
+
+    enum PlayerInputs : int { Up, Left, Right, Down, Fire };
     static ActionMap<int> playerInputs;
 
     static void initialize();
@@ -22,7 +25,7 @@ public:
 private:
 
     static void initTextures();
-
+    static void initSoundEffects();
     static void initPlayerInputs();
 };
 

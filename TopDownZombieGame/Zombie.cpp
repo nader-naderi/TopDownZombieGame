@@ -2,18 +2,18 @@
 #include "TextureHolder.h"
 #include <cstdlib>
 #include <ctime>
+#include "Configuration.hpp"
 
 using namespace std;
 
 void Zombie::spawn(float startX, float startY, int type, int seed)
 {
+	m_Sprite = Sprite(Configuration::textures.get(Configuration::Textures::Zombie));
 
 	switch (type)
 	{
 	case 0:
 		// Bloater
-		m_Sprite = Sprite(TextureHolder::GetTexture(
-			"graphics/zombie/idle/Idle.png"));
 
 		m_Speed = 40;
 		m_Health = 5;
@@ -21,18 +21,14 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
 
 	case 1:
 		// Chaser
-		m_Sprite = Sprite(TextureHolder::GetTexture(
-			"graphics/zombie/idle/Idle.png"));
-
+		
 		m_Speed = 70;
 		m_Health = 1;
 		break;
 
 	case 2:
 		// Crawler
-		m_Sprite = Sprite(TextureHolder::GetTexture(
-			"graphics/zombie/idle/Idle.png"));
-
+		
 		m_Speed = 20;
 		m_Health = 3;
 		break;
