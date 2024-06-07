@@ -1,3 +1,6 @@
+// This file declares the Action class and its associated Type enum. 
+// It also includes the necessary headers from the SFML library.
+
 #pragma once
 #include "SFML/Graphics.hpp"
 

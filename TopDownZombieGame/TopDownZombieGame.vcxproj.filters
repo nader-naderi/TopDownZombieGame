@@ -48,6 +48,18 @@
     <ClInclude Include="ResourceManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp">
@@ -71,17 +83,8 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="F:\My Works\Tutorials\Lynda\C++\Lynda – C++ Game Programming 1\Ex_Files_C_Plus_Plus_Programming_1\Ex_Files_C_Plus_Plus_Programming_1\Exercise Files\Proj_02_Codes\Zombie Arena Enhanced Version\code\CreateHorde.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="F:\My Works\Tutorials\Lynda\C++\Lynda – C++ Game Programming 1\Ex_Files_C_Plus_Plus_Programming_1\Ex_Files_C_Plus_Plus_Programming_1\Exercise Files\Proj_02_Codes\Zombie Arena Enhanced Version\code\CreateBackground.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.h">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Action.cpp">
       <Filter>Source Files</Filter>
@@ -101,11 +104,27 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateBackground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateHorde.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ResourceManager.tpl" />
     <None Include="ActionMap.tpl" />
     <None Include="ActionTarget.tpl" />
     <None Include="Player.tpl" />
+    <None Include="GameObject.tpl" />
   </ItemGroup>
 </Project>

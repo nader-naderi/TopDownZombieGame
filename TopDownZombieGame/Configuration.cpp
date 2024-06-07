@@ -2,14 +2,29 @@
 
 ResourceManager<sf::Texture, int> Configuration::textures;
 ResourceManager<sf::SoundBuffer, int> Configuration::soundBuffers;
+ResourceManager<sf::Font, int> Configuration::fonts;
+ResourceManager<sf::Music, int> Configuration::musics;
 
 ActionMap<int> Configuration::playerInputs;
 
+Player* Configuration::player = nullptr;
+
 void Configuration::initialize()
 {
+	initFonts();
     initTextures();
+	initMusics();
 	initSoundEffects();
+
     initPlayerInputs();
+
+	musics.get(Musics::Theme).setLoop(true);
+	musics.get(Musics::Theme).play();
+}
+
+void Configuration::initFonts()
+{
+	fonts.load(Fonts::GUI, "fonts/OpenSans-Regular.ttf");
 }
 
 void Configuration::initTextures()
@@ -33,4 +48,9 @@ void Configuration::initPlayerInputs()
 	playerInputs.map(PlayerInputs::Down, Action(sf::Keyboard::S));
 	playerInputs.map(PlayerInputs::Right, Action(sf::Keyboard::D));
 	playerInputs.map(PlayerInputs::Fire, Action(sf::Mouse::Left));
+}
+
+void Configuration::initMusics()
+{
+	musics.load(Musics::Theme, "sound/ambientmain_0.ogg");
 }

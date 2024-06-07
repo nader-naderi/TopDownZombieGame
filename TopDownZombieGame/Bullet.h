@@ -1,3 +1,6 @@
+// The Bullet class represents a projectile fired from a specific location towards a target.
+//  It provides methods to manage the bullet's position, movement, and status.
+
 #pragma once
 #include <SFML/Graphics.hpp>
 

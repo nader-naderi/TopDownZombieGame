@@ -123,8 +123,7 @@ void Player::HandleReloading()
 {
 	if (bulletsSpare <= 0)
 	{
-		//reloadFailed.play();
-
+		reloadFailed.play();
 		return;
 	}
 
@@ -134,7 +133,7 @@ void Player::HandleReloading()
 	bulletsSpare -= bulletsToDeduct;
 	bulletsInClip += bulletsToDeduct;
 
-	//reload.play();
+	reload.play();
 }
 
 void Player::spawn(IntRect arena, Vector2f resolution, int tileSize)
@@ -155,7 +154,6 @@ void Player::spawn(IntRect arena, Vector2f resolution, int tileSize)
 	// Strore the resolution for future use
 	m_Resolution.x = resolution.x;
 	m_Resolution.y = resolution.y;
-
 }
 
 Time Player::getLastHitTime()

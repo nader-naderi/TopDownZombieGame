@@ -22,11 +22,15 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="ActionMap.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Collision.hpp" />
     <ClInclude Include="Configuration.hpp" />
+    <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="random.hpp" />
     <ClInclude Include="ResourceManager.hpp" />
+    <ClInclude Include="Scene.hpp" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Zombie.h" />
     <ClInclude Include="GameEngine.h" />
@@ -37,15 +41,17 @@
     <ClCompile Include="ActionTarget.cpp" />
     <ClCompile Include="ActionTarget.h" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Configuration.cpp" />
-    <ClCompile Include="F:\My Works\Tutorials\Lynda\C++\Lynda – C++ Game Programming 1\Ex_Files_C_Plus_Plus_Programming_1\Ex_Files_C_Plus_Plus_Programming_1\Exercise Files\Proj_02_Codes\Zombie Arena Enhanced Version\code\CreateBackground.cpp" />
-    <ClCompile Include="F:\My Works\Tutorials\Lynda\C++\Lynda – C++ Game Programming 1\Ex_Files_C_Plus_Plus_Programming_1\Ex_Files_C_Plus_Plus_Programming_1\Exercise Files\Proj_02_Codes\Zombie Arena Enhanced Version\code\CreateHorde.cpp" />
-    <ClCompile Include="GameObject.h" />
+    <ClCompile Include="CreateBackground.cpp" />
+    <ClCompile Include="CreateHorde.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
     <ClCompile Include="Zombie.cpp" />
     <ClCompile Include="GameEngine.cpp" />
@@ -53,6 +59,7 @@
   <ItemGroup>
     <None Include="ActionMap.tpl" />
     <None Include="ActionTarget.tpl" />
+    <None Include="GameObject.tpl" />
     <None Include="Player.tpl" />
     <None Include="ResourceManager.tpl" />
   </ItemGroup>

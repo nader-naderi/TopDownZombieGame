@@ -69,7 +69,7 @@ bool GameEngine::CheckState(State targetState)
 void GameEngine::UpdateCameraInput()
 {
 	if (Keyboard::isKeyPressed(Keyboard::Left))
-	{
+	{ 
 		mainView->rotate(.5f);
 	}
 
@@ -92,7 +92,7 @@ void GameEngine::UpdateCameraInput()
 void GameEngine::UpdateReloadInput(Event event)
 {
 	if (CheckState(State::PLAYING) && event.key.code == Keyboard::R)
-		HandleReloading();
+		player.HandleReloading();
 }
 
 void GameEngine::UpdateGameStateInput(Event event)
@@ -515,7 +515,6 @@ void GameEngine::DrawHUD()
 
 void GameEngine::InitializeAssets()
 {
-	font.loadFromFile("fonts/OpenSans-Regular.ttf");
 	InitializeCrosshair();
 	InitializeBackground();
 	LoadHighscoreFile();
@@ -552,7 +551,7 @@ void GameEngine::InitializeAudio()
 
 void GameEngine::InitUIHighScore()
 {
-	hiScoreText.setFont(font);
+	hiScoreText.setFont(Configuration::fonts.get(Configuration::Fonts::GUI));
 	hiScoreText.setCharacterSize(55);
 	hiScoreText.setFillColor(Color::White);
 	hiScoreText.setPosition(1400, 0);

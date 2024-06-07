@@ -1,4 +1,12 @@
+// This file contains the implementation of the Action class.
+// The Action class is responsible for representing and 
+// managing different types of actions triggered by keyboard and mouse events.
+
+
 #include "Action.h"
+
+// Action Constructors: There are two constructors for the Action class, one for keyboard actions and one for mouse actions.
+//  These constructors initialize the _type and _event members based on the input parameters.
 Action::Action(const sf::Keyboard::Key& key, int type) : _type(type)
 {
 	_event.type = sf::Event::EventType::KeyPressed;
@@ -10,7 +18,13 @@ Action::Action(const sf::Mouse::Button& button, int type) : _type(type)
 	_event.type = sf::Event::EventType::MouseButtonPressed;
 	_event.mouseButton.button = button;
 }
-
+/// <summary>
+/// This overload compares an Action object with either another Action object or an sf::Event. 
+/// It checks if the event types match and, in the case of KeyPressed or MouseButtonPressed events, 
+/// compares the key or mouse button codes.
+/// </summary>
+/// <param name="event"></param>
+/// <returns></returns>
 bool Action::operator==(const sf::Event& event)const
 {
 	bool res = false;
@@ -47,6 +61,11 @@ bool Action::operator==(const Action& other)const
 	return _type == other._type and other == _event;
 }
 
+/// <summary>
+/// This function tests whether a specific Action is occurring in real-time by checking the current state of the keyboard or
+/// mouse button associated with the action.
+/// </summary>
+/// <returns></returns>
 bool Action::test()const
 {
 	bool res = false;
